@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using w0rms.Entities;
 using w0rms.Rendering;
 
 namespace w0rms.GameStates
@@ -13,6 +13,8 @@ namespace w0rms.GameStates
     class MatchState : GameState
     {
         World CurrentWorld;
+        public Camera2D Camera = new Camera2D();
+        Sprite background = new Sprite("hi"); //background picture to help illustrate Camera2D movement since we dont have a level system yet
 
         public string HUDChatMessage
         {
@@ -31,9 +33,11 @@ namespace w0rms.GameStates
             CurrentWorld = new World();
             SetHUDChatMessage("");
 
-            Stan = new Worm();
+            Team BestTeam = new Team("The Best", 0);
+            Stan = new Worm("Stan");
+            BestTeam.AddWorm(Stan);
 
-            CurrentWorld.AddEntity(Stan);
+            Console.WriteLine(BestTeam.ToString());
         }
 
         public void Start()
@@ -55,8 +59,14 @@ namespace w0rms.GameStates
 
         public void Render()
         {
-            TheGame.spriteBatch.Begin();
-
+            TheGame.spriteBatch.Begin(SpriteSortMode.Immediate,
+            BlendState.AlphaBlend,
+            null,
+            null,
+            null,
+            null,
+            Camera.get_transformation(TheGame.graphics.GraphicsDevice));
+            background.Draw();
             CurrentWorld.Render();
 
             //DRAW HUD
@@ -65,7 +75,7 @@ namespace w0rms.GameStates
             {
                 Text messageText = new Text(hudDisplayMessage);
                 messageText.DrawColor = Color.Black;
-                messageText.Position = new Vector2(TheGame.graphics.PreferredBackBufferWidth / 2, TheGame.graphics.PreferredBackBufferHeight);
+                messageText.Position = new Vector2(Camera.Pos.X, Camera.Pos.Y);
                 messageText.Position.Y -= messageText.Font.MeasureString("T").Y;
                 messageText.Position.X -= messageText.Font.MeasureString(messageText.ToDraw).X / 2;
 
@@ -93,7 +103,34 @@ namespace w0rms.GameStates
 
         public void Input()
         {
+            if (TheGame.keyboard.IsKeyDown(Keys.W))
+            {
+                Camera.Move(0, -10);
+                //to draw something at a position relative to the camera (eg. HUD elements) draw at Camera.Pos and offset from there
+            }
             if (TheGame.keyboard.IsKeyDown(Keys.A))
+            {
+                Camera.Move(-10, 0);
+            }
+            if (TheGame.keyboard.IsKeyDown(Keys.S))
+            {
+                Camera.Move(0, 10);
+            }
+            if (TheGame.keyboard.IsKeyDown(Keys.D))
+            {
+                Camera.Move(10, 0);
+            }
+
+            if (TheGame.keyboard.IsKeyDown(Keys.Q))
+            {
+                Camera.ZoomIn(0.01f);
+            }
+            if (TheGame.keyboard.IsKeyDown(Keys.E))
+            {
+                Camera.ZoomIn(-0.01f);
+            }
+
+            if (TheGame.keyboard.IsKeyDown(Keys.Space))
             {
                 SetHUDChatMessage("hi im brian");
             }
