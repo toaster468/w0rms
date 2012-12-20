@@ -8,10 +8,12 @@ namespace w0rms
     class World
     {
         public List<Entity> Ents;
+        public Terrain LevelTerrain;
 
         public World()
         {
             Ents = new List<Entity>();
+            LevelTerrain = new Terrain(256, 256);
         }
 
         public void AddEntity(Entity ent)

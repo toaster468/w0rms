@@ -40,7 +40,7 @@ namespace w0rms
             string s = Name + ": \n";
             foreach (Worm werm in TeamMembers)
             {
-                s += "* " + werm.Name + "\n";
+                s += "* " + werm.ToString() + "\n";
             }
             return s;
         }

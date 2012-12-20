@@ -19,11 +19,14 @@ namespace w0rms
         public static ContentManager MainContentLoader;
         static GameState CurrentState;
         public static KeyboardState keyboard;
+        public static Random Rng;
+        public static GraphicsDevice Shazam;
 
         public TheGame()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "w0rmsContent";
+            Rng = new Random();
         }
 
         protected override void Initialize()
@@ -35,6 +38,7 @@ namespace w0rms
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            Shazam = GraphicsDevice;
             MainContentLoader = Content;
         }
 
