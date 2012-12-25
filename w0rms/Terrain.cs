@@ -1,38 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using w0rms.Rendering;
+
+//using Microsoft.Xna.Framework;
+//using Microsoft.Xna.Framework.Graphics;
 
 namespace w0rms
 {
     class Terrain
     {
         double seed = 7515;
-        public Texture2D TheLevel;
+        public Microsoft.Xna.Framework.Graphics.Texture2D TheLevel;
+        public Pen bpen;
 
         public Terrain(int width, int height)
         {
             seed = TheGame.Rng.NextDouble() * TheGame.Rng.Next(0, 100);
-            TheLevel = GenerateNoiseMap(256, 256, 4);
+            bpen = new Pen(Brushes.Black);
+            bpen.Color = System.Drawing.Color.FromArgb(0, 0, 0);
+            bpen.Width = 8.0f;
+
+            GenerateLevelBitmap(GenerateSlice(2000, 5), 2000);
         }
 
-        private Texture2D GenerateNoiseMap(int width, int height, int octaves)
+        public float[] GenerateSlice(int width, int octaves)
         {
-            Texture2D noiseTexture;
-            var data = new float[width * height];
+            var data = new float[width];
 
-            /// track min and max noise value. Used to normalize the result to the 0 to 1.0 range.
             var min = float.MaxValue;
             var max = float.MinValue;
 
-            /// rebuild the permutation table to get a different noise pattern.
-            /// Leave this out if you want to play with changing the number of octaves while
-            /// maintaining the same overall pattern.
             Noise2d.Reseed();
 
             var frequency = 0.5f;
@@ -41,14 +44,13 @@ namespace w0rms
 
             for (var octave = 0; octave < octaves; octave++)
             {
-                /// parallel loop - easy and fast.
                 Parallel.For(0
-                    , width * height
+                    , width * 1
                     , (offset) =>
                     {
                         var i = offset % width;
                         var j = offset / width;
-                        var noise = Noise2d.Noise(i * frequency * 1f / width, j * frequency * 1f / height);
+                        var noise = Noise2d.Noise(i * frequency * 1f / width, j * frequency * 1f / 1);
                         noise = data[j * width + i] += noise * amplitude;
 
                         min = Math.Min(min, noise);
@@ -60,39 +62,55 @@ namespace w0rms
                 amplitude /= 2;
             }
 
-            noiseTexture = new Texture2D(TheGame.Shazam, width, height, false, SurfaceFormat.Color);
-
             var colors = data.Select(
                 (f) =>
                 {
                     var norm = (f - min) / (max - min);
-                    return new Color(norm, norm, norm, 1);
+                    return norm;
                 }
             ).ToArray();
 
-            noiseTexture.SetData(colors);
-            return noiseTexture;
+            return colors;
         }
 
-        public static Texture2D GenerateLevel(int width, int height, double seed)
+        public Bitmap GenerateLevelBitmap(float[] heightmap, int width)
         {
-            Texture2D boop = new Texture2D(TheGame.Shazam, width, height, false, SurfaceFormat.Color);
-            /*float[,] hi = new float[width, height];
-            for (int x = 0; x < width; x++)
+            Bitmap b = new Bitmap(2000, 1000);
+            using (Graphics g = Graphics.FromImage(b))
             {
-                for (int y = 0; y < height; y++)
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                //g.FillRectangle(Brushes.Transparent, 0, 0, 2000, 1000);
+
+                for (int i = 1; i < heightmap.Length; i += 1)
                 {
-                    hi[x, y] = SimplexNoise.GetNoise(x, y, seed);
+                    float newValuePrev = scaleRange(heightmap[i - 1], 0.0f, 1.0f, 0.25f, 0.8f);
+                    float newValue = scaleRange(heightmap[i], 0.0f, 1.0f, 0.25f, 0.8f);
+                    DrawLine(b, i - 1, newValuePrev * 1000, i, newValue * 1000, g);
+                    //DrawLine(b, i - 10, heightmap[i - 10] * 1000, i, heightmap[i] * 1000, g);
                 }
-            }*/
-            Console.WriteLine("starting generation");
-            /*Color[] hi = new Color[width * height];
-            for (int i = 0; i < (width * height); i++)
-            {
-                float value = SimplexNoise.GetNoise((double)i / 3, (double)i % 3, seed);
-                hi[i] = new Color(value, value, value);
+                //DrawLine(b, 1999, heightmap[1999] * 1000, 2000, 1000, g);
+                FloodFill(b, 1999, 999, Color.FromArgb(255, 255, 255, 255)); //make transparent
+                b.Save("C:/level.jpg");
             }
-            boop.SetData<Color>(hi);*/
+
+            return b;
+        }
+
+        public void DrawLine(Bitmap bananu, float x, float y, float x1, float y1, Graphics g)
+        {
+            //g.DrawLine(wpen, x, y, x1, y1);
+            g.DrawLine(bpen, x, y, x1, y1);
+        }
+
+        public float scaleRange(float value, float oldMin, float oldMax, float newMin, float newMax)
+        {
+            return (value / ((oldMax - oldMin) / (newMax - newMin))) + newMin;
+        }
+
+        public static Microsoft.Xna.Framework.Graphics.Texture2D GenerateLevel(int width, int height, double seed)
+        {
+            Microsoft.Xna.Framework.Graphics.Texture2D boop = new Microsoft.Xna.Framework.Graphics.Texture2D(TheGame.Shazam, width, height, false, Microsoft.Xna.Framework.Graphics.SurfaceFormat.Color);
+            Console.WriteLine("starting generation");
 
             Console.WriteLine("done c:");
             Stream stream = File.OpenWrite(@"C:/hi.jpg");
@@ -102,6 +120,50 @@ namespace w0rms
 
             boop.Dispose();
             return boop;
+        }
+
+        private void FloodFill(Bitmap bitmap, int x, int y, Color color)
+        {
+            BitmapData data = bitmap.LockBits(
+                new Rectangle(0, 0, bitmap.Width, bitmap.Height),
+                ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+            int[] bits = new int[data.Stride / 4 * data.Height];
+            Marshal.Copy(data.Scan0, bits, 0, bits.Length);
+
+            LinkedList<Point> check = new LinkedList<Point>();
+            int floodTo = color.ToArgb();
+            int floodFrom = bits[x + y * data.Stride / 4];
+            bits[x + y * data.Stride / 4] = floodTo;
+
+            if (floodFrom != floodTo)
+            {
+                check.AddLast(new Point(x, y));
+                while (check.Count > 0)
+                {
+                    Point cur = check.First.Value;
+                    check.RemoveFirst();
+
+                    foreach (Point off in new Point[] {
+                new Point(0, -1), new Point(0, 1),
+                new Point(-1, 0), new Point(1, 0)})
+                    {
+                        Point next = new Point(cur.X + off.X, cur.Y + off.Y);
+                        if (next.X >= 0 && next.Y >= 0 &&
+                            next.X < data.Width &&
+                            next.Y < data.Height)
+                        {
+                            if (bits[next.X + next.Y * data.Stride / 4] == floodFrom)
+                            {
+                                check.AddLast(next);
+                                bits[next.X + next.Y * data.Stride / 4] = floodTo;
+                            }
+                        }
+                    }
+                }
+            }
+
+            Marshal.Copy(bits, 0, data.Scan0, bits.Length);
+            bitmap.UnlockBits(data);
         }
     }
 }

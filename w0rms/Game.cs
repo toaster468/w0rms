@@ -33,6 +33,7 @@ namespace w0rms
         {
             base.Initialize();
             ChangeState(new GameStates.MatchState());
+            this.IsMouseVisible = true;
         }
 
         protected override void LoadContent()

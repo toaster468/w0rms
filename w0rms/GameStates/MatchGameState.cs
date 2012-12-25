@@ -28,7 +28,7 @@ namespace w0rms.GameStates
         TimeSpan hudMessageTickDelay;
         Texture2D Generated;
         Sprite hi = new Sprite();
-        int octaves = 0;
+        int octaves = 12;
         Worm Stan;
 
         public MatchState()
@@ -134,13 +134,11 @@ namespace w0rms.GameStates
 
             if (TheGame.keyboard.IsKeyDown(Keys.Q))
             {
-                //Camera.ZoomIn(0.01f);
-                octaves += 1;
+                Camera.ZoomIn(0.01f);
             }
             if (TheGame.keyboard.IsKeyDown(Keys.E))
             {
-                //Camera.ZoomIn(-0.01f);
-                octaves -= 1;
+                Camera.ZoomIn(-0.01f);
             }
 
             if (TheGame.keyboard.IsKeyDown(Keys.Space))
@@ -148,56 +146,6 @@ namespace w0rms.GameStates
                 Generated = GenerateNoiseMap(256, 256, octaves);
                 hi = new Sprite(Generated);
             }
-        }
-
-        private float[] GenerateSlice(int width, int octaves)
-        {
-            var data = new float[width];
-
-            /// track min and max noise value. Used to normalize the result to the 0 to 1.0 range.
-            var min = float.MaxValue;
-            var max = float.MinValue;
-
-            /// rebuild the permutation table to get a different noise pattern.
-            /// Leave this out if you want to play with changing the number of octaves while
-            /// maintaining the same overall pattern.
-            //Noise2d.Reseed();
-
-            var frequency = 0.5f;
-            var amplitude = 1f;
-            var persistence = 0.25f;
-
-            for (var octave = 0; octave < octaves; octave++)
-            {
-                /// parallel loop - easy and fast.
-                Parallel.For(0
-                    , width * 1
-                    , (offset) =>
-                    {
-                        var i = offset % width;
-                        var j = offset / width;
-                        var noise = Noise2d.Noise(i * frequency * 1f / width, j * frequency * 1f / height);
-                        noise = data[j * width + i] += noise * amplitude;
-
-                        min = Math.Min(min, noise);
-                        max = Math.Max(max, noise);
-                    }
-                );
-
-                frequency *= 2;
-                amplitude /= 2;
-            }
-
-            var colors = data.Select(
-                (f) =>
-                {
-                    var norm = (f - min) / (max - min);
-                    //return new Color(norm, norm, norm, 1);
-                    return norm;
-                }
-            ).ToArray();
-
-            return colors;
         }
 
         private Texture2D GenerateNoiseMap(int width, int height, int octaves)
@@ -213,7 +161,7 @@ namespace w0rms.GameStates
             /// rebuild the permutation table to get a different noise pattern.
             /// Leave this out if you want to play with changing the number of octaves while
             /// maintaining the same overall pattern.
-            //Noise2d.Reseed();
+            Noise2d.Reseed();
 
             var frequency = 0.5f;
             var amplitude = 1f;
