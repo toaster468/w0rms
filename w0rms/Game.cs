@@ -32,7 +32,6 @@ namespace w0rms
         protected override void Initialize()
         {
             base.Initialize();
-            ChangeState(new GameStates.MatchState());
             this.IsMouseVisible = true;
         }
 
@@ -41,6 +40,7 @@ namespace w0rms
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Shazam = GraphicsDevice;
             MainContentLoader = Content;
+            ChangeState(new GameStates.MatchState());
         }
 
         protected override void UnloadContent()

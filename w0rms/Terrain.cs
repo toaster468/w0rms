@@ -9,15 +9,22 @@ using System.Text;
 using System.Threading.Tasks;
 
 //using Microsoft.Xna.Framework;
-//using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Graphics;
+
+using xColor = Microsoft.Xna.Framework.Color;
 
 namespace w0rms
 {
     class Terrain
     {
         double seed = 7515;
-        public Microsoft.Xna.Framework.Graphics.Texture2D TheLevel;
+        public Texture2D TheLevel;
         public Pen bpen;
+
+        public Terrain(Texture2D texture)
+        {
+            TheLevel = texture;
+        }
 
         public Terrain(int width, int height)
         {
@@ -26,7 +33,31 @@ namespace w0rms
             bpen.Color = System.Drawing.Color.FromArgb(0, 0, 0);
             bpen.Width = 8.0f;
 
-            GenerateLevelBitmap(GenerateSlice(2000, 5), 2000);
+            var bmp = GenerateLevelBitmap(GenerateSlice(500, 5), 250);
+            TheLevel = GetTexture2DFromBitmap(TheGame.graphics.GraphicsDevice, bmp);
+        }
+
+        public static Texture2D GetTexture2DFromBitmap(GraphicsDevice device, Bitmap bitmap)
+        {
+            Texture2D tex = new Texture2D(device, bitmap.Width, bitmap.Height, false, SurfaceFormat.Color);
+
+            BitmapData data = bitmap.LockBits(new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, bitmap.PixelFormat);
+
+            int bufferSize = data.Height * data.Stride;
+
+            //create data buffer 
+            byte[] bytes = new byte[bufferSize];
+
+            // copy bitmap data into buffer
+            Marshal.Copy(data.Scan0, bytes, 0, bytes.Length);
+
+            // copy our buffer to the texture
+            tex.SetData(bytes);
+
+            // unlock the bitmap data
+            bitmap.UnlockBits(data);
+
+            return tex;
         }
 
         public float[] GenerateSlice(int width, int octaves)
@@ -75,10 +106,10 @@ namespace w0rms
 
         public Bitmap GenerateLevelBitmap(float[] heightmap, int width)
         {
-            Bitmap b = new Bitmap(2000, 1000);
+            Bitmap b = new Bitmap(500, 250);
             using (Graphics g = Graphics.FromImage(b))
             {
-                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
                 //g.FillRectangle(Brushes.Transparent, 0, 0, 2000, 1000);
 
                 for (int i = 1; i < heightmap.Length; i += 1)
@@ -89,7 +120,7 @@ namespace w0rms
                     //DrawLine(b, i - 10, heightmap[i - 10] * 1000, i, heightmap[i] * 1000, g);
                 }
                 //DrawLine(b, 1999, heightmap[1999] * 1000, 2000, 1000, g);
-                FloodFill(b, 1999, 999, Color.FromArgb(255, 255, 255, 255)); //make transparent
+                FloodFill(b, 499, 249, Color.FromArgb(255, 255, 255, 255)); //make transparent
                 b.Save("C:/level.jpg");
             }
 

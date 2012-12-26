@@ -77,6 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Camera2D.cs" />
+    <Compile Include="Deformer.cs" />
     <Compile Include="Projectile.cs" />
     <Compile Include="SimplexNoise.cs" />
     <Compile Include="Team.cs" />

@@ -33,7 +33,7 @@ namespace w0rms.GameStates
 
         public MatchState()
         {
-            CurrentWorld = new World();
+            CurrentWorld = new World(this);
             SetHUDChatMessage("");
 
             Team BestTeam = new Team("The Best", 0);
@@ -64,7 +64,7 @@ namespace w0rms.GameStates
 
         public void Render()
         {
-            TheGame.spriteBatch.Begin(SpriteSortMode.Immediate,
+            TheGame.spriteBatch.Begin(SpriteSortMode.Deferred,
             BlendState.AlphaBlend,
             null,
             null,
@@ -91,7 +91,6 @@ namespace w0rms.GameStates
             boop.Position = new Vector2(-100, -100);
             boop.DrawColor = Color.Purple;
             boop.Draw();
-            hi.Draw();
             TheGame.spriteBatch.End();
         }
 

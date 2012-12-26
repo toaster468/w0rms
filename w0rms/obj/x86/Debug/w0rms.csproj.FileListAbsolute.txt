@@ -1,0 +1,9 @@
+C:\Users\Brian\Documents\GitHub\w0rms\w0rms\bin\x86\Debug\w0rmsContent\font.xnb
+C:\Users\Brian\Documents\GitHub\w0rms\w0rms\bin\x86\Debug\w0rmsContent\hi.xnb
+C:\Users\Brian\Documents\GitHub\w0rms\w0rms\bin\x86\Debug\w0rms.exe
+C:\Users\Brian\Documents\GitHub\w0rms\w0rms\bin\x86\Debug\w0rms.pdb
+C:\Users\Brian\Documents\GitHub\w0rms\w0rms\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Users\Brian\Documents\GitHub\w0rms\w0rms\obj\x86\Debug\w0rms.exe
+C:\Users\Brian\Documents\GitHub\w0rms\w0rms\obj\x86\Debug\w0rms.pdb
+C:\Users\Brian\Documents\GitHub\w0rms\w0rms\bin\x86\Debug\w0rmsContent\level.xnb
+C:\Users\Brian\Documents\GitHub\w0rms\w0rms\bin\x86\Debug\w0rmsContent\genericDeformer.xnb
