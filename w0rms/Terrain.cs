@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 //using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
+using w0rms.Rendering;
 using xColor = Microsoft.Xna.Framework.Color;
 
 namespace w0rms
@@ -18,12 +18,12 @@ namespace w0rms
     class Terrain
     {
         double seed = 7515;
-        public Texture2D TheLevel;
+        public Sprite TheLevel;
         public Pen bpen;
 
         public Terrain(Texture2D texture)
         {
-            TheLevel = texture;
+            TheLevel = new Sprite(texture);
         }
 
         public Terrain(int width, int height)
@@ -31,10 +31,10 @@ namespace w0rms
             seed = TheGame.Rng.NextDouble() * TheGame.Rng.Next(0, 100);
             bpen = new Pen(Brushes.Black);
             bpen.Color = System.Drawing.Color.FromArgb(0, 0, 0);
-            bpen.Width = 8.0f;
+            bpen.Width = 2.0f;
 
-            var bmp = GenerateLevelBitmap(GenerateSlice(500, 5), 250);
-            TheLevel = GetTexture2DFromBitmap(TheGame.graphics.GraphicsDevice, bmp);
+            var bmp = GenerateLevelBitmap(GenerateSlice(500, 12), 500);
+            TheLevel = new Sprite(GetTexture2DFromBitmap(TheGame.graphics.GraphicsDevice, bmp));
         }
 
         public static Texture2D GetTexture2DFromBitmap(GraphicsDevice device, Bitmap bitmap)
@@ -45,7 +45,7 @@ namespace w0rms
 
             int bufferSize = data.Height * data.Stride;
 
-            //create data buffer 
+            //create data buffer
             byte[] bytes = new byte[bufferSize];
 
             // copy bitmap data into buffer
@@ -112,15 +112,15 @@ namespace w0rms
                 g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
                 //g.FillRectangle(Brushes.Transparent, 0, 0, 2000, 1000);
 
-                for (int i = 1; i < heightmap.Length; i += 1)
+                for (int i = 1; i < 500; i += 1)
                 {
                     float newValuePrev = scaleRange(heightmap[i - 1], 0.0f, 1.0f, 0.25f, 0.8f);
                     float newValue = scaleRange(heightmap[i], 0.0f, 1.0f, 0.25f, 0.8f);
-                    DrawLine(b, i - 1, newValuePrev * 1000, i, newValue * 1000, g);
+                    DrawLine(b, i - 1, newValuePrev * 500, i, newValue * 500, g);
                     //DrawLine(b, i - 10, heightmap[i - 10] * 1000, i, heightmap[i] * 1000, g);
                 }
                 //DrawLine(b, 1999, heightmap[1999] * 1000, 2000, 1000, g);
-                FloodFill(b, 499, 249, Color.FromArgb(255, 255, 255, 255)); //make transparent
+                FloodFill(b, 1, 1, Color.FromArgb(255, 255, 255, 255)); //make transparent
                 b.Save("C:/level.jpg");
             }
 

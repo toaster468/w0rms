@@ -14,8 +14,6 @@ namespace w0rms.GameStates
     class MatchState : GameState
     {
         World CurrentWorld;
-        public Camera2D Camera = new Camera2D();
-        Sprite background = new Sprite("hi"); //background picture to help illustrate Camera2D movement since we dont have a level system yet
 
         public string HUDChatMessage
         {
@@ -70,9 +68,9 @@ namespace w0rms.GameStates
             null,
             null,
             null,
-            Camera.get_transformation(TheGame.graphics.GraphicsDevice));
-            background.Draw();
+            CurrentWorld.Camera.get_transformation(TheGame.graphics.GraphicsDevice));
             CurrentWorld.Render();
+            TheGame.Shazam.SamplerStates[0] = SamplerState.PointWrap;
 
             //DRAW HUD
 
@@ -80,17 +78,12 @@ namespace w0rms.GameStates
             {
                 Text messageText = new Text(hudDisplayMessage);
                 messageText.DrawColor = Color.Black;
-                messageText.Position = new Vector2(Camera.Pos.X, Camera.Pos.Y);
+                messageText.Position = new Vector2(CurrentWorld.Camera.Pos.X, CurrentWorld.Camera.Pos.Y);
                 messageText.Position.Y -= messageText.Font.MeasureString("T").Y;
                 messageText.Position.X -= messageText.Font.MeasureString(messageText.ToDraw).X / 2;
 
                 messageText.Draw();
             }
-            Text boop = new Text();
-            boop.ToDraw = octaves.ToString();
-            boop.Position = new Vector2(-100, -100);
-            boop.DrawColor = Color.Purple;
-            boop.Draw();
             TheGame.spriteBatch.End();
         }
 
@@ -115,29 +108,29 @@ namespace w0rms.GameStates
         {
             if (TheGame.keyboard.IsKeyDown(Keys.W))
             {
-                Camera.Move(0, -10);
-                //to draw something at a position relative to the camera (eg. HUD elements) draw at Camera.Pos and offset from there
+                CurrentWorld.Camera.Move(0, -10);
+                //to draw something at a position relative to the CurrentWorld.Camera (eg. HUD elements) draw at CurrentWorld.Camera.Pos and offset from there
             }
             if (TheGame.keyboard.IsKeyDown(Keys.A))
             {
-                Camera.Move(-10, 0);
+                CurrentWorld.Camera.Move(-10, 0);
             }
             if (TheGame.keyboard.IsKeyDown(Keys.S))
             {
-                Camera.Move(0, 10);
+                CurrentWorld.Camera.Move(0, 10);
             }
             if (TheGame.keyboard.IsKeyDown(Keys.D))
             {
-                Camera.Move(10, 0);
+                CurrentWorld.Camera.Move(10, 0);
             }
 
             if (TheGame.keyboard.IsKeyDown(Keys.Q))
             {
-                Camera.ZoomIn(0.01f);
+                CurrentWorld.Camera.ZoomIn(0.01f);
             }
             if (TheGame.keyboard.IsKeyDown(Keys.E))
             {
-                Camera.ZoomIn(-0.01f);
+                CurrentWorld.Camera.ZoomIn(-0.01f);
             }
 
             if (TheGame.keyboard.IsKeyDown(Keys.Space))
