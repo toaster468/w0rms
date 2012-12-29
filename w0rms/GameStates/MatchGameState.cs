@@ -63,7 +63,7 @@ namespace w0rms.GameStates
         public void Render()
         {
             TheGame.spriteBatch.Begin(SpriteSortMode.Deferred,
-            BlendState.AlphaBlend,
+            BlendState.NonPremultiplied,
             null,
             null,
             null,

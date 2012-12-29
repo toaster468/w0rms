@@ -33,7 +33,7 @@ namespace w0rms
                             var dest = (px + x) + (py + y) * level.Width;
                             var dest2 = x + y * _deformTexture.Width;
 
-                            var alpha = new Color(255, 255, 255, 0).PackedValue;
+                            uint alpha = 0;
                             var white = new Color(255, 255, 255, 255).PackedValue;
 
                             if (_deformData[dest2] != alpha && _levelData[dest] != alpha)
@@ -59,7 +59,6 @@ namespace w0rms
                 _deformTexture = value;
                 _deformData = new uint[_deformTexture.Width * _deformTexture.Height];
                 _deformTexture.GetData(_deformData, 0, _deformTexture.Width * _deformTexture.Height);
-
             }
         }   
     }
