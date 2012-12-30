@@ -15,6 +15,16 @@ namespace w0rms.Rendering
             private set;
         }
 
+        public float timer = 0f;
+        public float interval = 100f;
+        public int currentFrame = 0;
+        public int spriteWidth = 48;
+        public int spriteHeight = 48;
+        public int totalFrames = 6;
+        public Rectangle SourceRectangle;
+        public int Height;
+        public int Width;
+
         public Rectangle SpriteBounds;
 
         public Sprite()
@@ -43,15 +53,22 @@ namespace w0rms.Rendering
             SetTexture(Resources<Texture2D>.Get(file));
         }
 
-        public void SetTexture(Texture2D text)
+        public virtual void SetTexture(Texture2D text)
         {
             MyTexture = text;
             SpriteBounds = new Rectangle(0, 0, text.Width, text.Height);
+            Width = text.Width;
+            Height = text.Height;
         }
 
         public override void Draw()
         {
             TheGame.spriteBatch.Draw(MyTexture, Position, SpriteBounds, DrawColor, Rotation, Origin, Scale, DrawEffects, 0);
+        }
+
+        public void Draw(Texture2D text, Vector2 position, Rectangle srcrec)
+        {
+            TheGame.spriteBatch.Draw(text, position, srcrec, DrawColor, Rotation, Origin, Scale, DrawEffects, 0);
         }
 
         //collision shit c:
@@ -70,11 +87,11 @@ namespace w0rms.Rendering
             int widthMe = MyTexture.Width;
             int heightMe = MyTexture.Height;
 
-            if (calcPerPixel &&                                // if we need per pixel
-                ((Math.Min(widthOther, heightOther) > 100) ||  // at least avoid doing it
-                (Math.Min(widthMe, heightMe) > 100)))          // for small sizes (nobody will notice :P)
+            if (calcPerPixel &&
+                ((Math.Min(widthOther, heightOther) > 100) ||
+                (Math.Min(widthMe, heightMe) > 100)))
             {
-                return Bounds.Intersects(other.Bounds) // If simple intersection fails, don't even bother with per-pixel
+                return Bounds.Intersects(other.Bounds) //check for AABB collision first
                     && PerPixelCollision(this, other);
             }
 
@@ -96,14 +113,14 @@ namespace w0rms.Rendering
             int y1 = Math.Max(a.Bounds.Y, b.Bounds.Y);
             int y2 = Math.Min(a.Bounds.Y + a.Bounds.Height, b.Bounds.Y + b.Bounds.Height);
 
-            // For each single pixel in the intersecting rectangle
+            // For each pixel in the intersecting rectangle
             for (int y = y1; y < y2; ++y)
             {
                 for (int x = x1; x < x2; ++x)
                 {
                     // Get the color from each texture
-                    Color Ca = bitsA[(x - a.Bounds.X) + (y - a.Bounds.Y) * a.MyTexture.Width];
-                    Color Cb = bitsB[(x - b.Bounds.X) + (y - b.Bounds.Y) * b.MyTexture.Width];
+                    Color Ca = bitsA[(x - a.Bounds.X) + (y - a.Bounds.Y) * a.Width];
+                    Color Cb = bitsB[(x - b.Bounds.X) + (y - b.Bounds.Y) * b.Width];
 
                     if (Ca.A != 0 && Cb.A != 0) // If both colors are not transparent (the alpha channel is not 0), then there is a collision
                     {
@@ -122,10 +139,10 @@ namespace w0rms.Rendering
             get
             {
                 return new Rectangle(
-                    (int)Position.X - MyTexture.Width,
-                    (int)Position.Y - MyTexture.Height,
-                    MyTexture.Width,
-                    MyTexture.Height);
+                   (int)Position.X,
+                   (int)Position.Y,
+                   (int)Width,
+                   (int)Height);
             }
         }
     }

@@ -34,9 +34,6 @@ namespace w0rms
             }
         }
 
-        /// <summary>
-        /// generate a new permutation.
-        /// </summary>
         public static void Reseed()
         {
             CalculatePermutation(out _permutation);

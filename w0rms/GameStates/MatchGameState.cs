@@ -25,7 +25,9 @@ namespace w0rms.GameStates
         DateTime lastHudMessageTick;
         TimeSpan hudMessageTickDelay;
         Texture2D Generated;
-        Sprite hi = new Sprite();
+
+        Sprite background = new Sprite();
+
         int octaves = 12;
         Worm Stan;
 
@@ -39,7 +41,7 @@ namespace w0rms.GameStates
             BestTeam.AddWorm(Stan);
 
             Generated = GenerateNoiseMap(256, 256, 4);
-            hi = new Sprite(Generated);
+            background = new Sprite(Generated);
             Console.WriteLine(BestTeam.ToString());
         }
 
@@ -62,16 +64,15 @@ namespace w0rms.GameStates
 
         public void Render()
         {
-            TheGame.spriteBatch.Begin(SpriteSortMode.Deferred,
-            BlendState.NonPremultiplied,
+            TheGame.spriteBatch.Begin(SpriteSortMode.Immediate,
+            BlendState.AlphaBlend,
             null,
             null,
             null,
             null,
             CurrentWorld.Camera.get_transformation(TheGame.graphics.GraphicsDevice));
             CurrentWorld.Render();
-            TheGame.Shazam.SamplerStates[0] = SamplerState.PointWrap;
-
+            //background.Draw();
             //DRAW HUD
 
             if (hudDisplayMessage.Length > 0)
@@ -136,7 +137,7 @@ namespace w0rms.GameStates
             if (TheGame.keyboard.IsKeyDown(Keys.Space))
             {
                 Generated = GenerateNoiseMap(256, 256, octaves);
-                hi = new Sprite(Generated);
+                background = new Sprite(Generated);
             }
         }
 
@@ -146,13 +147,9 @@ namespace w0rms.GameStates
 
             var data = new float[width * height];
 
-            /// track min and max noise value. Used to normalize the result to the 0 to 1.0 range.
             var min = float.MaxValue;
             var max = float.MinValue;
 
-            /// rebuild the permutation table to get a different noise pattern.
-            /// Leave this out if you want to play with changing the number of octaves while
-            /// maintaining the same overall pattern.
             Noise2d.Reseed();
 
             var frequency = 0.5f;
@@ -161,7 +158,6 @@ namespace w0rms.GameStates
 
             for (var octave = 0; octave < octaves; octave++)
             {
-                /// parallel loop - easy and fast.
                 Parallel.For(0
                     , width * height
                     , (offset) =>
@@ -189,7 +185,6 @@ namespace w0rms.GameStates
                 {
                     var norm = (f - min) / (max - min);
                     return new Color(norm, norm, norm, 1);
-                    //return norm;
                 }
             ).ToArray();
 

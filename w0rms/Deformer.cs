@@ -10,6 +10,7 @@ namespace w0rms
     class Deformer
     {
         private Texture2D _deformTexture;
+        public w0rms.Rendering.Sprite DeformSprite;
         private uint[] _deformData;
 
         public Deformer(Texture2D deformer)
@@ -60,6 +61,6 @@ namespace w0rms
                 _deformData = new uint[_deformTexture.Width * _deformTexture.Height];
                 _deformTexture.GetData(_deformData, 0, _deformTexture.Width * _deformTexture.Height);
             }
-        }   
+        }
     }
 }

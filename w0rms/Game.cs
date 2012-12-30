@@ -32,6 +32,9 @@ namespace w0rms
         protected override void Initialize()
         {
             base.Initialize();
+            graphics.PreferredBackBufferHeight = 768;
+            graphics.PreferredBackBufferWidth = 1024;
+            graphics.ApplyChanges();
             this.IsMouseVisible = true;
         }
 

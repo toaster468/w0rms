@@ -21,10 +21,13 @@ namespace w0rms
         {
             Parent = parent;
             Ents = new List<Entity>();
-            LevelTerrain = new Terrain(TheGame.MainContentLoader.Load<Texture2D>("level"));
+            LevelTerrain = new Terrain(Resources<Texture2D>.Get("level"));
             //LevelTerrain = new Terrain(500, 250);
             //LevelTerrain.TheLevel.Position = new Vector2(-500, -250);
-            Brush = new Deformer(TheGame.MainContentLoader.Load<Texture2D>("genericDeformer"));
+            //Camera.Move(new Vector2(-800, -600));
+            Brush = new Deformer(Resources<Texture2D>.Get("genericDeformer"));
+
+            AddEntity(new Worm("hi"));
         }
 
         public void AddEntity(Entity ent)
@@ -49,10 +52,9 @@ namespace w0rms
             {
                 Ents[i].Update(ts);
             }
-
             if (Mouse.GetState().LeftButton == ButtonState.Pressed)
             {
-                Brush.Deform(LevelTerrain.TheLevel.MyTexture, GetAbsX(), GetAbsY());
+                Brush.Deform(LevelTerrain.TheLevel.MyTexture, GetAbsX() - 64, GetAbsY() - 64);
             }
         }
 
@@ -61,8 +63,9 @@ namespace w0rms
             LevelTerrain.TheLevel.Draw();
 
             Text boop = new Text();
-            boop.ToDraw = new Vector2(GetAbsX(), GetAbsY()).ToString();
-            boop.Position = Camera.Pos;
+            boop.ToDraw = "Absolute Mouse Pos: " + new Vector2(GetAbsX(), GetAbsY()).ToString();
+            boop.Position.X = Camera.Pos.X - (TheGame.Shazam.Viewport.Width / 2);
+            boop.Position.Y = Camera.Pos.Y - (TheGame.Shazam.Viewport.Height / 2);
             boop.DrawColor = Color.Purple;
             boop.Draw();
 

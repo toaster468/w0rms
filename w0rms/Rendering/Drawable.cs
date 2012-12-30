@@ -10,7 +10,8 @@ namespace w0rms.Rendering
 {
     abstract class Drawable
     {
-        public Vector2 Origin, Position, Scale;
+        public Vector2 Origin, Position;
+        public float Scale;
         public float Rotation;
         public Color DrawColor;
         public SpriteEffects DrawEffects;
@@ -20,7 +21,7 @@ namespace w0rms.Rendering
             DrawEffects = SpriteEffects.None;
             Origin = new Vector2(0);
             Position = new Vector2(0);
-            Scale = new Vector2(1);
+            Scale = 1.0f;
             DrawColor = new Color(255, 255, 255);
             Rotation = 0;
         }
