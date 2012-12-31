@@ -88,8 +88,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="werm2.png">
-      <Name>werm2</Name>
+    <Compile Include="werm.png">
+      <Name>werm</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

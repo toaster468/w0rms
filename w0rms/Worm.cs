@@ -17,14 +17,14 @@ namespace w0rms
         public Worm(string naam)
         {
             this.Name = naam;
-            Sprite = new AnimatedSprite(new Vector2(24), 0, 1);
-            Sprite.Load("werm2", 6, 200, 48, 48);
+            Sprite = new AnimatedSprite(0, 1);
+            Sprite.Load("werm", 3, 150, 32, 32);
         }
 
         public override void Update(TimeSpan ts)
         {
             Sprite.UpdateFrame((float)ts.TotalMilliseconds);
-            Sprite.Position = MyWorld.Camera.Pos;
+            Sprite.Position = Position;
         }
 
         public override void Draw()

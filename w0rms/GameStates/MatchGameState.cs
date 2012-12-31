@@ -36,13 +36,8 @@ namespace w0rms.GameStates
             CurrentWorld = new World(this);
             SetHUDChatMessage("");
 
-            Team BestTeam = new Team("The Best", 0);
-            Stan = new Worm("Stan");
-            BestTeam.AddWorm(Stan);
-
             Generated = GenerateNoiseMap(256, 256, 4);
             background = new Sprite(Generated);
-            Console.WriteLine(BestTeam.ToString());
         }
 
         public void Start()

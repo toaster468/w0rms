@@ -24,6 +24,7 @@ namespace w0rms.Rendering
         public Rectangle SourceRectangle;
         public int Height;
         public int Width;
+        public const float DistanceToCheck = 10;
 
         public Rectangle SpriteBounds;
 
@@ -71,7 +72,21 @@ namespace w0rms.Rendering
             TheGame.spriteBatch.Draw(text, position, srcrec, DrawColor, Rotation, Origin, Scale, DrawEffects, 0);
         }
 
-        //collision shit c:
+        public bool PixelCollision(Sprite other)
+        {
+            Color[] bitsA = new Color[MyTexture.Width * MyTexture.Height];
+            MyTexture.GetData(bitsA);
+            Color[] bitsB = new Color[other.Bounds.Width * other.Bounds.Height];
+            other.MyTexture.GetData(bitsB);
+
+            for (float x = other.Position.X - DistanceToCheck; x < other.Position.X + DistanceToCheck; x++)
+            {
+                for (float y = other.Position.Y - DistanceToCheck; y < other.Position.Y + DistanceToCheck; y++)
+                {
+                }
+            }
+            return false;
+        }
 
         public bool CollidesWith(Sprite other)
         {

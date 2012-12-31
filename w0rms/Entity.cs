@@ -10,11 +10,13 @@ namespace w0rms
     class Entity
     {
         public Vector2 Position;
+        public Vector2 Velocity;
         public World MyWorld;
 
         public Entity()
         {
             Position = new Vector2(0);
+            Velocity = new Vector2(0);
             MyWorld = null;
         }
 

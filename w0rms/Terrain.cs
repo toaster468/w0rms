@@ -20,10 +20,59 @@ namespace w0rms
         double seed = 7515;
         public Sprite TheLevel;
         public Pen bpen;
+        public bool[,] CollisionMap;
 
         public Terrain(Texture2D texture)
         {
             TheLevel = new Sprite(texture);
+            RecalculateCollision();
+        }
+
+        public bool[,] RecalculateCollisionB()
+        {
+            Texture2D level = TheLevel.MyTexture;
+            bool[,] collisionMap = new bool[level.Width + 1, level.Height + 1];
+            Color[] boop = new Color[(level.Width + 1) * (level.Height + 1)];
+            level.GetData<Color>(boop);
+
+            for (int i = 0; i < boop.Length; i++)
+            {
+                int y = i / level.Width;
+                int x = i - (y * level.Height);
+                if (boop[i].A == 0)
+                {
+                    collisionMap[x, y] = true;
+                }
+                else
+                {
+                    collisionMap[x, y] = false;
+                }
+            }
+            return collisionMap;
+        }
+
+        public void RecalculateCollision()
+        {
+            Texture2D level = TheLevel.MyTexture;
+            //PLS FIX PLS BRIAN PLSSSS
+            bool[,] collisionMap = new bool[level.Width, level.Height];
+            Color[] _levelData = new Color[level.Width * level.Height];
+            level.GetData(_levelData, 0, (level.Width * level.Height));
+
+            for (int i = 0; i < _levelData.Length; i++)
+            {
+                int y = i / level.Width;
+                int x = i - (y * level.Height);
+                if (_levelData[i].A != 0)
+                {
+                    collisionMap[x, y] = true;
+                }
+                else
+                {
+                    collisionMap[x, y] = false;
+                }
+            }
+            CollisionMap = collisionMap;
         }
 
         public Terrain(int width, int height)
@@ -44,17 +93,10 @@ namespace w0rms
             BitmapData data = bitmap.LockBits(new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, bitmap.PixelFormat);
 
             int bufferSize = data.Height * data.Stride;
-
-            //create data buffer
             byte[] bytes = new byte[bufferSize];
 
-            // copy bitmap data into buffer
             Marshal.Copy(data.Scan0, bytes, 0, bytes.Length);
-
-            // copy our buffer to the texture
             tex.SetData(bytes);
-
-            // unlock the bitmap data
             bitmap.UnlockBits(data);
 
             return tex;

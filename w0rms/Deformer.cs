@@ -62,5 +62,27 @@ namespace w0rms
                 _deformTexture.GetData(_deformData, 0, _deformTexture.Width * _deformTexture.Height);
             }
         }
+
+        public bool[,] RecalculateCollision(Texture2D level)
+        {
+            bool[,] collisionMap = new bool[level.Width + 1, level.Height + 1];
+            Color[] boop = new Color[(level.Width + 1) * (level.Height + 1)];
+            level.GetData<Color>(boop);
+
+            for (int i = 0; i < boop.Length; i++)
+            {
+                int y = i / level.Width;
+                int x = i - (y * level.Height);
+                if (boop[i].A == 0)
+                {
+                    collisionMap[x, y] = true;
+                }
+                else
+                {
+                    collisionMap[x, y] = false;
+                }
+            }
+            return collisionMap;
+        }
     }
 }

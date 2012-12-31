@@ -16,6 +16,8 @@ namespace w0rms
         private Deformer Brush;
         private GameState Parent;
         public Camera2D Camera = new Camera2D();
+        public bool wormIsColliding = false;
+        public Worm hi;
 
         public World(GameState parent)
         {
@@ -26,8 +28,8 @@ namespace w0rms
             //LevelTerrain.TheLevel.Position = new Vector2(-500, -250);
             //Camera.Move(new Vector2(-800, -600));
             Brush = new Deformer(Resources<Texture2D>.Get("genericDeformer"));
-
-            AddEntity(new Worm("hi"));
+            hi = new Worm("hi");
+            AddEntity(hi);
         }
 
         public void AddEntity(Entity ent)
@@ -55,6 +57,35 @@ namespace w0rms
             if (Mouse.GetState().LeftButton == ButtonState.Pressed)
             {
                 Brush.Deform(LevelTerrain.TheLevel.MyTexture, GetAbsX() - 64, GetAbsY() - 64);
+                Console.WriteLine("AAAAAAA");
+                LevelTerrain.RecalculateCollision();
+                Console.WriteLine("BBBBB");
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Up))
+            {
+                hi.Position.Y -= 10;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.Down))
+            {
+                hi.Position.Y += 10;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.Left))
+            {
+                hi.Position.X -= 10;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            {
+                hi.Position.X += 10;
+            }
+
+            if (LevelTerrain.TheLevel.CollidesWith(hi.Sprite))
+            {
+                wormIsColliding = true;
+            }
+            else
+            {
+                wormIsColliding = false;
             }
         }
 
@@ -63,7 +94,7 @@ namespace w0rms
             LevelTerrain.TheLevel.Draw();
 
             Text boop = new Text();
-            boop.ToDraw = "Absolute Mouse Pos: " + new Vector2(GetAbsX(), GetAbsY()).ToString();
+            boop.ToDraw = "Absolute Mouse Pos: " + new Vector2(GetAbsX(), GetAbsY()).ToString() + "\n" + wormIsColliding.ToString();
             boop.Position.X = Camera.Pos.X - (TheGame.Shazam.Viewport.Width / 2);
             boop.Position.Y = Camera.Pos.Y - (TheGame.Shazam.Viewport.Height / 2);
             boop.DrawColor = Color.Purple;

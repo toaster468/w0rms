@@ -10,27 +10,26 @@ namespace w0rms
 {
     class AnimatedSprite : Sprite
     {
-        public AnimatedSprite(Vector2 origin, float rotation, float scale)
+        public AnimatedSprite(float rotation, float scale)
         {
             this.Rotation = rotation;
             this.Scale = scale;
-            this.Origin = origin;
         }
 
         public void Load(string asset, int frameCount, int interval, int spriteHeight, int spriteWidth)
         {
-            SetTexture("werm2");
-            this.spriteHeight = 48;
-            this.spriteWidth = 48;
+            SetTexture(asset);
+            this.spriteHeight = spriteHeight;
+            this.spriteWidth = spriteWidth;
             this.totalFrames = frameCount;
             this.interval = interval;
+            this.Origin = new Vector2(spriteWidth / 2, spriteHeight / 2);
         }
 
         public void UpdateFrame(float elapsed)
         {
             SourceRectangle = new Rectangle(currentFrame * spriteWidth, 0, spriteWidth, spriteHeight);
             timer += elapsed;
-            Rotation += 0.001f;
 
             if (timer > interval)
             {
