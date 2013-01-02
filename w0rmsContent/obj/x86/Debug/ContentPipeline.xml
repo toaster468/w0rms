@@ -8,7 +8,7 @@
       <Processor>FontDescriptionProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Brian\Documents\GitHub\w0rms\w0rms\bin\x86\Debug\w0rmsContent\font.xnb</Output>
-      <Time>2012-12-25T11:02:49.7132299-09:00</Time>
+      <Time>2013-01-01T22:44:32.4793776-09:00</Time>
     </Item>
     <Item>
       <Source>hi.jpg</Source>
@@ -17,7 +17,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Brian\Documents\GitHub\w0rms\w0rms\bin\x86\Debug\w0rmsContent\hi.xnb</Output>
-      <Time>2012-12-25T11:02:49.71423-09:00</Time>
+      <Time>2013-01-01T22:44:32.4803777-09:00</Time>
     </Item>
     <Item>
       <Source>level.png</Source>
@@ -26,7 +26,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Brian\Documents\GitHub\w0rms\w0rms\bin\x86\Debug\w0rmsContent\level.xnb</Output>
-      <Time>2012-12-25T12:13:12.6747695-09:00</Time>
+      <Time>2013-01-01T22:44:32.4883782-09:00</Time>
     </Item>
     <Item>
       <Source>genericDeformer.png</Source>
@@ -35,7 +35,16 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Brian\Documents\GitHub\w0rms\w0rms\bin\x86\Debug\w0rmsContent\genericDeformer.xnb</Output>
-      <Time>2012-12-29T10:13:48.8542974-09:00</Time>
+      <Time>2013-01-01T22:44:32.4793776-09:00</Time>
+    </Item>
+    <Item>
+      <Source>werm.png</Source>
+      <Name>werm</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Brian\Documents\GitHub\w0rms\w0rms\bin\x86\Debug\w0rmsContent\werm.xnb</Output>
+      <Time>2013-01-01T22:44:32.4893782-09:00</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>

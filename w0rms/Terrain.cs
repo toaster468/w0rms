@@ -54,23 +54,18 @@ namespace w0rms
         public void RecalculateCollision()
         {
             Texture2D level = TheLevel.MyTexture;
-            //PLS FIX PLS BRIAN PLSSSS
             bool[,] collisionMap = new bool[level.Width, level.Height];
-            Color[] _levelData = new Color[level.Width * level.Height];
-            level.GetData(_levelData, 0, (level.Width * level.Height));
+            uint[] _levelData = new uint[level.Width * level.Height];
+            level.GetData(_levelData, 0, level.Width * level.Height);
 
             for (int i = 0; i < _levelData.Length; i++)
             {
                 int y = i / level.Width;
-                int x = i - (y * level.Height);
-                if (_levelData[i].A != 0)
-                {
+                int x = i % level.Width;
+                if (_levelData[i] != 0)
                     collisionMap[x, y] = true;
-                }
                 else
-                {
                     collisionMap[x, y] = false;
-                }
             }
             CollisionMap = collisionMap;
         }

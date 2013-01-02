@@ -19,3 +19,5 @@ C:\Users\Brian\Documents\GitHub\w0rms\w0rms\obj\x86\Debug\w0rms.csprojResolveAss
 C:\Users\Brian\Documents\GitHub\w0rms\w0rms\bin\x86\Debug\w0rmsContent\genericDeformer.xnb
 C:\Users\Marcin\Documents\GitHub\w0rms\w0rms\bin\x86\Debug\C3.XNA.Primitives2D.dll
 C:\Users\Marcin\Documents\GitHub\w0rms\w0rms\bin\x86\Debug\w0rmsContent\werm.xnb
+C:\Users\Brian\Documents\GitHub\w0rms\w0rms\bin\x86\Debug\w0rmsContent\werm.xnb
+C:\Users\Brian\Documents\GitHub\w0rms\w0rms\bin\x86\Debug\C3.XNA.Primitives2D.dll
