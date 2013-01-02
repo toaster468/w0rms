@@ -16,11 +16,13 @@ namespace w0rms
         public Entity()
         {
             Position = new Vector2(0);
-            Velocity = new Vector2(0);
             MyWorld = null;
         }
 
-        public virtual void Update(TimeSpan ts) { }
+        public virtual void Update(TimeSpan ts) 
+        {
+
+        }
 
         public virtual void Draw() { }
 

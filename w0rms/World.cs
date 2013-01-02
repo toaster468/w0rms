@@ -17,7 +17,9 @@ namespace w0rms
         private GameState Parent;
         public Camera2D Camera = new Camera2D();
         public bool wormIsColliding = false;
-        public Worm hi;
+        public Worm currentWorm;
+        public float Wind = 0;
+        public float Gravity = 10;
 
         public World(GameState parent)
         {
@@ -28,8 +30,8 @@ namespace w0rms
             //LevelTerrain.TheLevel.Position = new Vector2(-500, -250);
             //Camera.Move(new Vector2(-800, -600));
             Brush = new Deformer(Resources<Texture2D>.Get("genericDeformer"));
-            hi = new Worm("hi");
-            AddEntity(hi);
+            currentWorm = new Worm("hi");
+            AddEntity(currentWorm);
         }
 
         public void AddEntity(Entity ent)
@@ -50,42 +52,19 @@ namespace w0rms
 
         public void Update(TimeSpan ts)
         {
+            currentWorm.isActive = true;
+
             for (int i = 0; i < Ents.Count; i++)
             {
                 Ents[i].Update(ts);
             }
+
             if (Mouse.GetState().LeftButton == ButtonState.Pressed)
             {
                 Brush.Deform(LevelTerrain.TheLevel.MyTexture, GetAbsX() - 64, GetAbsY() - 64);
                 Console.WriteLine("AAAAAAA");
                 LevelTerrain.RecalculateCollision();
                 Console.WriteLine("BBBBB");
-            }
-
-            if (Keyboard.GetState().IsKeyDown(Keys.Up))
-            {
-                hi.Position.Y -= 10;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.Down))
-            {
-                hi.Position.Y += 10;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.Left))
-            {
-                hi.Position.X -= 10;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.Right))
-            {
-                hi.Position.X += 10;
-            }
-
-            if (LevelTerrain.TheLevel.CollidesWith(hi.Sprite))
-            {
-                wormIsColliding = true;
-            }
-            else
-            {
-                wormIsColliding = false;
             }
         }
 

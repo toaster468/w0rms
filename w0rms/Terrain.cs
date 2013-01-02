@@ -28,29 +28,6 @@ namespace w0rms
             RecalculateCollision();
         }
 
-        public bool[,] RecalculateCollisionB()
-        {
-            Texture2D level = TheLevel.MyTexture;
-            bool[,] collisionMap = new bool[level.Width + 1, level.Height + 1];
-            Color[] boop = new Color[(level.Width + 1) * (level.Height + 1)];
-            level.GetData<Color>(boop);
-
-            for (int i = 0; i < boop.Length; i++)
-            {
-                int y = i / level.Width;
-                int x = i - (y * level.Height);
-                if (boop[i].A == 0)
-                {
-                    collisionMap[x, y] = true;
-                }
-                else
-                {
-                    collisionMap[x, y] = false;
-                }
-            }
-            return collisionMap;
-        }
-
         public void RecalculateCollision()
         {
             Texture2D level = TheLevel.MyTexture;
@@ -68,6 +45,20 @@ namespace w0rms
                     collisionMap[x, y] = false;
             }
             CollisionMap = collisionMap;
+        }
+
+        public bool CanPass(Microsoft.Xna.Framework.Rectangle rectangle)
+        {
+            for (int x = rectangle.X; x < CollisionMap.GetLength(0) || x < rectangle.X + rectangle.Width; x++)
+            {
+                for (int y = rectangle.Y; y < CollisionMap.GetLength(1) || y < rectangle.Y + rectangle.Height; y++)
+                {
+                    if (x < 0 || y < 0) continue;
+                    if (CollisionMap[x, y]) return false;
+                }
+            }
+
+            return true;
         }
 
         public Terrain(int width, int height)
