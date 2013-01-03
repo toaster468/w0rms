@@ -31,6 +31,7 @@ namespace w0rms
         public override void Update(TimeSpan ts)
         {
             Sprite.UpdateFrame((float)ts.TotalMilliseconds);
+            Sprite.Position = Position;
 
             if (isActive) Movement();
             isActive = false;

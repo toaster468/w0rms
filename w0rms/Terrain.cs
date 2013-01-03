@@ -39,22 +39,27 @@ namespace w0rms
             {
                 int y = i / level.Width;
                 int x = i % level.Width;
-                if (_levelData[i] != 0)
-                    collisionMap[x, y] = true;
-                else
+
+                if (_levelData[i] == 0)
+                {
                     collisionMap[x, y] = false;
+                }
+                else collisionMap[x, y] = true;
             }
+
             CollisionMap = collisionMap;
         }
 
         public bool CanPass(Microsoft.Xna.Framework.Rectangle rectangle)
         {
-            for (int x = rectangle.X; x < CollisionMap.GetLength(0) || x < rectangle.X + rectangle.Width; x++)
+            for (int x = rectangle.X; x < rectangle.X + rectangle.Width; x++)
             {
-                for (int y = rectangle.Y; y < CollisionMap.GetLength(1) || y < rectangle.Y + rectangle.Height; y++)
+                for (int y = rectangle.Y; y < rectangle.Y + rectangle.Height; y++)
                 {
                     if (x < 0 || y < 0) continue;
-                    if (CollisionMap[x, y]) return false;
+                    if (x >= CollisionMap.GetLength(0) || y >= CollisionMap.GetLength(1)) continue;
+                    if (CollisionMap[x, y]) 
+                        return false;
                 }
             }
 
